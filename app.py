@@ -57,7 +57,7 @@ def register():
         else:
             flash('Username atau email sudah terdaftar', 'danger')
     
-    return render_template('register.html')
+    return render_template('auth/register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -85,7 +85,7 @@ def login():
         else:
             flash('Username atau password salah', 'danger')
     
-    return render_template('login.html')
+    return render_template('auth/login.html')
 
 @app.route('/logout')
 def logout():
@@ -101,7 +101,7 @@ def user_dashboard():
         return redirect(url_for('admin_dashboard'))
     
     bookings = Pesanan.get_by_user(session['user_id'])
-    return render_template('user_dashboard.html', bookings=bookings)
+    return render_template('user/user_dashboard.html', bookings=bookings)
 
 @app.route('/user/profile')
 @login_required
@@ -111,7 +111,7 @@ def user_profile():
         return redirect(url_for('admin_dashboard'))
     
     user = User.get_by_id(session['user_id'])
-    return render_template('user_profile.html', user=user)
+    return render_template('user/user_profile.html', user=user)
 
 @app.route('/user/profile/update', methods=['POST'])
 @login_required
@@ -189,7 +189,7 @@ def booking(destination_id):
         flash('Destinasi tidak ditemukan', 'danger')
         return redirect(url_for('destinations'))
     
-    return render_template('booking_form.html', destination=destination, now=datetime.utcnow(), timedelta=timedelta)
+    return render_template('user/booking_form.html', destination=destination, now=datetime.utcnow(), timedelta=timedelta)
 
 @app.route('/booking/detail/<int:id>')
 @login_required
@@ -202,7 +202,7 @@ def booking_detail(id):
     if not booking or booking['id_user'] != session['user_id']:
         flash('Booking tidak ditemukan', 'danger')
         return redirect(url_for('user_dashboard'))
-    return render_template('booking_detail.html', booking=booking)
+    return render_template('user/booking_detail.html', booking=booking)
 
 @app.route('/booking/cancel/<int:id>', methods=['POST'])
 @login_required
@@ -229,13 +229,13 @@ def cancel_booking(id):
 def admin_dashboard():
     stats = Statistics.get_admin_stats()
     recent_bookings = Pesanan.get_recent(10)
-    return render_template('admin_dashboard.html', stats=stats, bookings=recent_bookings)
+    return render_template('admin/admin_dashboard.html', stats=stats, bookings=recent_bookings)
 
 @app.route('/admin/destinations')
 @admin_required
 def admin_destinations():
     destinations = Destinasi.get_all()
-    return render_template('admin_destinations.html', destinations=destinations)
+    return render_template('admin/admin_destinations.html', destinations=destinations)
 
 @app.route('/admin/destination/add', methods=['GET', 'POST'])
 @admin_required
@@ -255,7 +255,7 @@ def add_destination():
         else:
             flash('Gagal menambahkan destinasi', 'danger')
     
-    return render_template('admin_destination_form.html', destination=None)
+    return render_template('admin/admin_destination_form.html', destination=None)
 
 @app.route('/admin/destination/edit/<int:id>', methods=['GET', 'POST'])
 @admin_required
@@ -280,7 +280,7 @@ def edit_destination(id):
         flash('Destinasi tidak ditemukan', 'danger')
         return redirect(url_for('admin_destinations'))
     
-    return render_template('admin_destination_form.html', destination=destination)
+    return render_template('admin/admin_destination_form.html', destination=destination)
 
 @app.route('/admin/destination/delete/<int:id>', methods=['POST'])
 @admin_required
@@ -296,7 +296,7 @@ def delete_destination(id):
 @admin_required
 def admin_bookings():
     bookings = Pesanan.get_all()
-    return render_template('admin_bookings.html', bookings=bookings)
+    return render_template('admin/admin_bookings.html', bookings=bookings)
 
 @app.route('/admin/booking/update-status/<int:id>', methods=['POST'])
 @admin_required
@@ -314,16 +314,13 @@ def update_booking_status(id):
 @admin_required
 def admin_users():
     users = User.get_all()
-    return render_template('admin_users.html', users=users)
+    return render_template('admin/admin_users.html', users=users)
 
-# Error handlers
+
+# Error Handlers
 @app.errorhandler(404)
-def not_found(e):
+def page_not_found(e):
     return render_template('404.html'), 404
-
-@app.errorhandler(500)
-def server_error(e):
-    return render_template('500.html'), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

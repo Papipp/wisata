@@ -1,0 +1,105 @@
+body {
+    background-color: #000;
+    color: #0f0; /* Hijau Neon */
+    font-family: 'Courier New', Courier, monospace;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    overflow: hidden;
+}
+
+.terminal-box {
+    width: 90%;
+    max-width: 700px;
+    padding: 20px;
+    border: 1px solid #0f0;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+    background: rgba(0, 20, 0, 0.9);
+    position: relative;
+}
+
+.terminal-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #0f0;
+    color: #000;
+    padding: 2px 10px;
+    font-weight: bold;
+    font-size: 0.8rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.code-area {
+    margin-top: 15px;
+}
+
+.error-code {
+    font-size: 5rem;
+    font-weight: bold;
+    text-shadow: 0 0 10px #0f0;
+}
+
+.typing {
+    border-right: .15em solid #0f0;
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline-block;
+    animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+}
+
+@keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+}
+
+@keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: #0f0; }
+}
+
+.glitch {
+    animation: glitch 1s linear infinite;
+}
+
+@keyframes glitch {
+    2%, 64% { transform: translate(2px,0) skew(0deg); }
+    4%, 60% { transform: translate(-2px,0) skew(0deg); }
+    62% { transform: translate(0,0) skew(5deg); }
+}
+
+.btn-hacker {
+    background: transparent;
+    color: #0f0;
+    border: 1px solid #0f0;
+    padding: 10px 20px;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 20px;
+    transition: 0.3s;
+}
+
+.btn-hacker:hover {
+    background: #0f0;
+    color: #000;
+    box-shadow: 0 0 20px #0f0;
+}
+
+.scanline {
+    width: 100%;
+    height: 2px;
+    background: rgba(0, 255, 0, 0.1);
+    position: absolute;
+    top: 0;
+    animation: scanline 4s linear infinite;
+}
+
+@keyframes scanline {
+    0% { top: 0; }
+    100% { top: 100%; }
+}
