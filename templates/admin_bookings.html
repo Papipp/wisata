@@ -7,7 +7,7 @@
 
     <div class="card shadow">
         <div class="card-body p-0">
-            <div class="table-responsive">
+            <div class="table-responsive" style="overflow: visible;">
                 <table class="table table-hover mb-0">
                     <thead>
                         <tr>
@@ -48,9 +48,9 @@
                                 </span>
                             </td>
                             <td>
-                                <div class="btn-group" role="group">
+                                <div class="btn-group dropstart">
                                     <button type="button" class="btn btn-sm btn-primary dropdown-toggle" 
-                                            data-bs-toggle="dropdown" data-bs-boundary="viewport">
+                                            data-bs-toggle="dropdown" aria-expanded="false">
                                         <i class="bi bi-pencil"></i>
                                         <span class="d-none d-sm-inline"> Update</span>
                                     </button>
@@ -99,14 +99,4 @@
     </div>
     {% endif %}
 </div>
-
-{% block extra_css %}
-<style>
-    @media (max-width: 768px) {
-        .table {
-            font-size: 0.85rem;
-        }
-    }
-</style>
-{% endblock %}
 {% endblock %}

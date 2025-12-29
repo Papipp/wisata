@@ -6,20 +6,16 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# fungsi untuk menghubungkan ke datbase
 def get_db():
-    """Membuat koneksi database"""
     DATABASE_URL = os.getenv("DB_URL")
     conn = psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor)
     conn.autocommit = True 
     return conn
 
-
 class User:
-    """Class untuk operasi CRUD User"""
-    
     @staticmethod
     def create(username, email, password, phone, role='user'):
-        """Membuat user baru"""
         conn = get_db()
         cur = conn.cursor()
         hashed_password = generate_password_hash(password)
@@ -35,7 +31,6 @@ class User:
     
     @staticmethod
     def verify(username, password):
-        """Verifikasi login user"""
         conn = get_db()
         cur = conn.cursor()
         
@@ -51,7 +46,6 @@ class User:
     
     @staticmethod
     def get_by_id(id_user):
-        """Mengambil user berdasarkan ID"""
         conn = get_db()
         cur = conn.cursor()
         
@@ -64,7 +58,6 @@ class User:
     
     @staticmethod
     def get_all():
-        """Mengambil semua user"""
         conn = get_db()
         cur = conn.cursor()
         
@@ -79,7 +72,6 @@ class User:
     
     @staticmethod
     def update(id_user, email, phone):
-        """Update data user"""
         conn = get_db()
         cur = conn.cursor()
         
@@ -91,13 +83,9 @@ class User:
         conn.close()
         return True
 
-
 class Destinasi:
-    """Class untuk operasi CRUD Destinasi"""
-    
     @staticmethod
     def get_all():
-        """Mengambil semua destinasi"""
         conn = get_db()
         cur = conn.cursor()
         
@@ -110,7 +98,6 @@ class Destinasi:
     
     @staticmethod
     def get_by_id(id_destinasi):
-        """Mengambil destinasi berdasarkan ID"""
         conn = get_db()
         cur = conn.cursor()
         
@@ -123,7 +110,6 @@ class Destinasi:
     
     @staticmethod
     def create(nama, deskripsi, lokasi, harga, durasi, image_url, kategori):
-        """Membuat destinasi baru"""
         conn = get_db()
         cur = conn.cursor()
         
@@ -138,7 +124,6 @@ class Destinasi:
     
     @staticmethod
     def update(id_destinasi, nama, deskripsi, lokasi, harga, durasi, image_url, kategori):
-        """Update destinasi"""
         conn = get_db()
         cur = conn.cursor()
         
@@ -153,7 +138,6 @@ class Destinasi:
     
     @staticmethod
     def delete(id_destinasi):
-        """Menghapus destinasi"""
         conn = get_db()
         cur = conn.cursor()
         
@@ -164,11 +148,8 @@ class Destinasi:
 
 
 class Pesanan:
-    """Class untuk operasi CRUD Pesanan (Booking)"""
-    
     @staticmethod
     def create(id_user, id_destinasi, tanggal, jumlah_orang, jumlah_harga, pesan):
-        """Membuat pesanan baru"""
         conn = get_db()
         cur = conn.cursor()
         
@@ -184,7 +165,6 @@ class Pesanan:
     
     @staticmethod
     def get_by_id(id_pesanan):
-        """Mengambil pesanan berdasarkan ID dengan join"""
         conn = get_db()
         cur = conn.cursor()
         
@@ -204,7 +184,6 @@ class Pesanan:
     
     @staticmethod
     def get_by_user(id_user):
-        """Mengambil semua pesanan user"""
         conn = get_db()
         cur = conn.cursor()
         
@@ -223,7 +202,6 @@ class Pesanan:
     
     @staticmethod
     def get_all():
-        """Mengambil semua pesanan"""
         conn = get_db()
         cur = conn.cursor()
         
@@ -243,7 +221,6 @@ class Pesanan:
     
     @staticmethod
     def get_recent(limit=10):
-        """Mengambil pesanan terbaru"""
         conn = get_db()
         cur = conn.cursor()
         
@@ -263,7 +240,6 @@ class Pesanan:
     
     @staticmethod
     def update_status(id_pesanan, status):
-        """Update status pesanan"""
         conn = get_db()
         cur = conn.cursor()
         
@@ -276,46 +252,32 @@ class Pesanan:
         return True
 
 
+# Statistik untuk dashboard admin
 class Statistics:
-    """Class untuk statistik admin dashboard"""
-    
     @staticmethod
     def get_admin_stats():
-        """Mengambil statistik untuk admin dashboard"""
         conn = get_db()
         cur = conn.cursor()
         
-        # Total users
+        # data daftar user
         cur.execute('SELECT COUNT(*) as total FROM "user" WHERE role = %s', ('user',))
         total_users = cur.fetchone()['total']
         
-        # Total destinations
+        # data jumlah destinasi
         cur.execute('SELECT COUNT(*) as total FROM destinasi')
         total_destinations = cur.fetchone()['total']
         
-        # Total bookings
+        # data jumlah booking
         cur.execute('SELECT COUNT(*) as total FROM pesanan')
         total_bookings = cur.fetchone()['total']
         
-        # Pending bookings
+        # status booking
         cur.execute('SELECT COUNT(*) as total FROM pesanan WHERE status = %s', ('pending',))
         pending_bookings = cur.fetchone()['total']
-        
-        # Total revenue
-        cur.execute(
-            'SELECT SUM(jumlah_harga) as total FROM pesanan WHERE status IN (%s, %s)',
-            ('confirmed', 'completed')
-        )
-        result = cur.fetchone()
-        total_revenue = result['total'] if result['total'] else 0
-        
-        cur.close()
-        conn.close()
         
         return {
             'total_users': total_users,
             'total_destinations': total_destinations,
             'total_bookings': total_bookings,
             'pending_bookings': pending_bookings,
-            'total_revenue': total_revenue
         }
