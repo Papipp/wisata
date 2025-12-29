@@ -1,8 +1,9 @@
+import os
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from functools import wraps
-import os
 from models import User, Destinasi, Pesanan, Statistics
 from datetime import datetime, timedelta
+from dotenv import load_dotenv
 
 load_dotenv()
 
