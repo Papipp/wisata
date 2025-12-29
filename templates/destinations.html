@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Destinasi - Travel Indonesia{% endblock %}
+
+{% block content %}
+<div class="hero-section" style="min-height: 250px;">
+    <div class="container position-relative">
+        <h1 class="display-4 fw-bold">Destinasi Wisata</h1>
+        <p class="lead">Jelajahi keindahan Indonesia dari Sabang sampai Merauke</p>
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <p class="text-muted">Menampilkan {{ destinations|length }} destinasi</p>
+        </div>
+        <div class="col-md-4">
+            <select class="form-select" id="categoryFilter">
+                <option value="">Semua Kategori</option>
+                <option value="Pantai">Pantai</option>
+                <option value="Gunung">Gunung</option>
+                <option value="Budaya">Budaya</option>
+                <option value="Danau">Danau</option>
+                <option value="Hutan">Hutan</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row g-4" id="destinationGrid">
+        {% for destination in destinations %}
+        <div class="col-md-6 col-lg-4 destination-item" data-category="{{ destination.kategori }}">
+            <div class="card h-100">
+                <img src="{{ destination.image_url }}" class="card-img-top" alt="{{ destination.nama }}">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="card-title mb-0">{{ destination.nama }}</h5>
+                        <span class="badge bg-primary">{{ destination.kategori }}</span>
+                    </div>
+                    <p class="text-muted mb-2">
+                        <i class="bi bi-geo-alt"></i> {{ destination.lokasi }}
+                    </p>
+                    <p class="card-text">{{ destination.deskripsi[:100] }}...</p>
+                    <hr>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="text-primary mb-0">Rp {{ "{:,.0f}".format(destination.harga) }}</h5>
+                            <small class="text-muted">
+                                <i class="bi bi-clock"></i> {{ destination.durasi }}
+                            </small>
+                        </div>
+                        <a href="{{ url_for('destination_detail', id=destination.id_destinasi) }}" class="btn btn-primary btn-sm">
+                            Lihat Detail
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+document.getElementById('categoryFilter').addEventListener('change', function() {
+    const selectedCategory = this.value;
+    const items = document.querySelectorAll('.destination-item');
+    
+    items.forEach(item => {
+        if (selectedCategory === '' || item.dataset.category === selectedCategory) {
+            item.style.display = 'block';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+});
+</script>
+{% endblock %}
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Detail Booking - Travel Indonesia{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-ticket-detailed"></i> Detail Booking</h4>
+                </div>
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <span class="badge status-{{ booking.status }} fs-6">
+                            {{ booking.status.upper() }}
+                        </span>
+                        <p class="text-muted mt-2">Booking ID: #{{ booking.id_pesanan }}</p>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <img src="{{ booking.image_url }}" class="img-fluid rounded" alt="{{ booking.destination_name }}">
+                        </div>
+                        <div class="col-md-8">
+                            <h3>{{ booking.destination_name }}</h3>
+                            <p class="text-muted">
+                                <i class="bi bi-geo-alt"></i> {{ booking.lokasi }}
+                            </p>
+                            <hr>
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong><i class="bi bi-calendar"></i> Tanggal:</strong><br>
+                                    {{ booking.tanggal.strftime('%d %B %Y') }}
+                                </div>
+                                <div class="col-6">
+                                    <strong><i class="bi bi-people"></i> Peserta:</strong><br>
+                                    {{ booking.jumlah_orang }} orang
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if booking.pesan %}
+                    <div class="alert alert-info">
+                        <strong><i class="bi bi-chat-left-text"></i> Permintaan Khusus:</strong><br>
+                        {{ booking.pesan }}
+                    </div>
+                    {% endif %}
+
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <h5>Informasi Pembayaran</h5>
+                            <div class="d-flex justify-content-between">
+                                <span>Total Pembayaran:</span>
+                                <strong class="text-primary fs-4">Rp {{ "{:,.0f}".format(booking.jumlah_harga) }}</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+                        {% if booking.status == 'pending' %}
+                        <form method="POST" action="{{ url_for('cancel_booking', id=booking.id_pesanan) }}" 
+                              onsubmit="return confirm('Yakin ingin membatalkan booking ini?')">
+                            <button type="submit" class="btn btn-danger w-100">
+                                <i class="bi bi-x-circle"></i> Batalkan Booking
+                            </button>
+                        </form>
+                        {% endif %}
+                        <a href="{{ url_for('user_dashboard') }}" class="btn btn-outline-primary">
+                            <i class="bi bi-arrow-left"></i> Kembali ke Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

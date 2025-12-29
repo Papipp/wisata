@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Kelola Booking - Admin{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="mb-4"><i class="bi bi-calendar-check"></i> Kelola Booking</h1>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>User</th>
+                            <th>Email</th>
+                            <th>Destinasi</th>
+                            <th>Tanggal Perjalanan</th>
+                            <th>Peserta</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for booking in bookings %}
+                        <tr>
+                            <td>#{{ booking.id_pesanan }}</td>
+                            <td>{{ booking.user_name }}</td>
+                            <td>{{ booking.user_email }}</td>
+                            <td>
+                                <strong>{{ booking.destination_name }}</strong><br>
+                                <small class="text-muted">{{ booking.lokasi }}</small>
+                            </td>
+                            <td>{{ booking.tanggal.strftime('%d/%m/%Y') }}</td>
+                            <td>{{ booking.jumlah_orang }} orang</td>
+                            <td class="text-primary fw-bold">Rp {{ "{:,.0f}".format(booking.jumlah_harga) }}</td>
+                            <td>
+                                <span class="badge status-{{ booking.status }}">
+                                    {{ booking.status }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-sm btn-primary dropdown-toggle" 
+                                            data-bs-toggle="dropdown">
+                                        Update
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <form method="POST" action="{{ url_for('update_booking_status', id=booking.id_pesanan) }}">
+                                                <input type="hidden" name="status" value="confirmed">
+                                                <button type="submit" class="dropdown-item">
+                                                    <i class="bi bi-check-circle text-success"></i> Confirmed
+                                                </button>
+                                            </form>
+                                        </li>
+                                        <li>
+                                            <form method="POST" action="{{ url_for('update_booking_status', id=booking.id_pesanan) }}">
+                                                <input type="hidden" name="status" value="completed">
+                                                <button type="submit" class="dropdown-item">
+                                                    <i class="bi bi-check-all text-info"></i> Completed
+                                                </button>
+                                            </form>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <form method="POST" action="{{ url_for('update_booking_status', id=booking.id_pesanan) }}"
+                                                  onsubmit="return confirm('Batalkan booking ini?')">
+                                                <input type="hidden" name="status" value="cancelled">
+                                                <button type="submit" class="dropdown-item text-danger">
+                                                    <i class="bi bi-x-circle"></i> Cancelled
+                                                </button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

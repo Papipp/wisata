@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}Dashboard User - Travel Indonesia{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="mb-4">
+        <i class="bi bi-speedometer2"></i> Dashboard Saya
+    </h1>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="stat-card">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="mb-0">{{ bookings|length }}</h3>
+                        <p class="mb-0">Total Booking</p>
+                    </div>
+                    <i class="bi bi-calendar-check"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="mb-0">{{ bookings|selectattr('status', 'equalto', 'pending')|list|length }}</h3>
+                        <p class="mb-0">Pending</p>
+                    </div>
+                    <i class="bi bi-clock-history"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="mb-0">{{ bookings|selectattr('status', 'equalto', 'confirmed')|list|length }}</h3>
+                        <p class="mb-0">Confirmed</p>
+                    </div>
+                    <i class="bi bi-check-circle"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-header bg-white">
+            <h4 class="mb-0"><i class="bi bi-list-ul"></i> Riwayat Booking</h4>
+        </div>
+        <div class="card-body p-0">
+            {% if bookings %}
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Destinasi</th>
+                            <th>Tanggal</th>
+                            <th>Peserta</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for booking in bookings %}
+                        <tr>
+                            <td>#{{ booking.id_pesanan }}</td>
+                            <td>
+                                <strong>{{ booking.destination_name }}</strong><br>
+                                <small class="text-muted">{{ booking.lokasi }}</small>
+                            </td>
+                            <td>{{ booking.tanggal.strftime('%d/%m/%Y') }}</td>
+                            <td>{{ booking.jumlah_orang }} orang</td>
+                            <td class="text-primary fw-bold">Rp {{ "{:,.0f}".format(booking.jumlah_harga) }}</td>
+                            <td>
+                                <span class="badge status-{{ booking.status }}">
+                                    {{ booking.status }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{{ url_for('booking_detail', id=booking.id_pesanan) }}" 
+                                   class="btn btn-sm btn-primary">
+                                    <i class="bi bi-eye"></i> Detail
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-inbox text-muted" style="font-size: 4rem;"></i>
+                <p class="text-muted mt-3">Belum ada booking</p>
+                <a href="{{ url_for('destinations') }}" class="btn btn-primary">
+                    <i class="bi bi-map"></i> Jelajahi Destinasi
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

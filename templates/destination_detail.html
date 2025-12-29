@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}{{ destination.nama }} - Travel Indonesia{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <img src="{{ destination.image_url }}" class="img-fluid rounded shadow-lg mb-4" alt="{{ destination.nama }}">
+            
+            <h1 class="fw-bold mb-3">{{ destination.nama }}</h1>
+            <p class="text-muted mb-4">
+                <i class="bi bi-geo-alt-fill"></i> {{ destination.lokasi }}
+                <span class="badge bg-primary ms-2">{{ destination.kategori }}</span>
+            </p>
+            
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-info-circle"></i> Deskripsi</h5>
+                    <p class="card-text">{{ destination.deskripsi }}</p>
+                </div>
+            </div>
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6><i class="bi bi-clock"></i> Durasi</h6>
+                            <p class="mb-0">{{ destination.durasi }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6><i class="bi bi-tag"></i> Harga Mulai</h6>
+                            <p class="mb-0 text-primary fw-bold">Rp {{ "{:,.0f}".format(destination.harga) }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-lg position-sticky" style="top: 90px;">
+                <div class="card-body">
+                    <h4 class="card-title mb-4">Informasi Booking</h4>
+                    <div class="d-grid gap-2 mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span>Harga per orang:</span>
+                            <strong class="text-primary">Rp {{ "{:,.0f}".format(destination.harga) }}</strong>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>Durasi:</span>
+                            <strong>{{ destination.durasi }}</strong>
+                        </div>
+                    </div>
+                    <hr>
+                    {% if session.user_id %}
+                        {% if session.role == 'user' %}
+                        <a href="{{ url_for('booking', destination_id=destination.id_destinasi) }}" class="btn btn-primary w-100 mb-2">
+                            <i class="bi bi-calendar-check"></i> Booking Sekarang
+                        </a>
+                        {% else %}
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i> Login sebagai user untuk booking
+                        </div>
+                        {% endif %}
+                    {% else %}
+                    <a href="{{ url_for('login') }}" class="btn btn-primary w-100 mb-2">
+                        <i class="bi bi-box-arrow-in-right"></i> Login untuk Booking
+                    </a>
+                    {% endif %}
+                    <a href="{{ url_for('destinations') }}" class="btn btn-outline-secondary w-100">
+                        <i class="bi bi-arrow-left"></i> Kembali
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}Booking {{ destination.nama }} - Travel Indonesia{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg">
+                <div class="card-body p-4">
+                    <h2 class="card-title mb-4">
+                        <i class="bi bi-calendar-check"></i> Form Booking
+                    </h2>
+
+                    <div class="alert alert-info">
+                        <strong>{{ destination.nama }}</strong> - {{ destination.lokasi }}<br>
+                        <small>Harga: Rp {{ "{:,.0f}".format(destination.harga) }} per orang</small>
+                    </div>
+
+                    <form method="POST" action="{{ url_for('booking', destination_id=destination.id_destinasi) }}">
+                        <div class="mb-3">
+                            <label for="tanggal" class="form-label">
+                                <i class="bi bi-calendar"></i> Tanggal Perjalanan *
+                            </label>
+                            <input type="date" class="form-control" id="tanggal" name="tanggal" 
+                                   min="{{ (now + timedelta(days=3)).strftime('%Y-%m-%d') }}" required>
+                            <div class="form-text">Minimal 3 hari dari sekarang</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="jumlah_orang" class="form-label">
+                                <i class="bi bi-people"></i> Jumlah Peserta *
+                            </label>
+                            <input type="number" class="form-control" id="jumlah_orang" name="jumlah_orang" 
+                                   min="1" max="10" value="1" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="pesan" class="form-label">
+                                <i class="bi bi-chat-left-text"></i> Permintaan Khusus (Opsional)
+                            </label>
+                            <textarea class="form-control" id="pesan" name="pesan" 
+                                      rows="3" placeholder="Contoh: makanan vegetarian, kursi roda, dll"></textarea>
+                        </div>
+
+                        <div class="card bg-light mb-4">
+                            <div class="card-body">
+                                <h5>Ringkasan Harga</h5>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Harga per orang:</span>
+                                    <span id="pricePerPerson">Rp {{ "{:,.0f}".format(destination.harga) }}</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Jumlah peserta:</span>
+                                    <span id="numPeopleDisplay">1</span>
+                                </div>
+                                <hr>
+                                <div class="d-flex justify-content-between">
+                                    <strong>Total:</strong>
+                                    <strong class="text-primary" id="totalPrice">Rp {{ "{:,.0f}".format(destination.harga) }}</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-check-circle"></i> Konfirmasi Booking
+                            </button>
+                            <a href="{{ url_for('destination_detail', id=destination.id_destinasi) }}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Kembali
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+const pricePerPerson = {{ destination.harga }};
+const numPeopleInput = document.getElementById('jumlah_orang');
+const numPeopleDisplay = document.getElementById('numPeopleDisplay');
+const totalPriceDisplay = document.getElementById('totalPrice');
+
+numPeopleInput.addEventListener('input', function() {
+    const numPeople = parseInt(this.value) || 1;
+    const total = pricePerPerson * numPeople;
+    
+    numPeopleDisplay.textContent = numPeople;
+    totalPriceDisplay.textContent = 'Rp ' + total.toLocaleString('id-ID');
+});
+</script>
+{% endblock %}
+{% endblock %}
