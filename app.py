@@ -4,8 +4,10 @@ import os
 from models import User, Destinasi, Pesanan, Statistics
 from datetime import datetime, timedelta
 
+load_dotenv()
+
 app = Flask(__name__)
-app.secret_key = os.getenv('SECRET_KEY', 'your-secret-key-here-change-in-production')
+app.secret_key = os.getenv('SECRET_KEY')
 
 # Decorator untuk mengecek login
 def login_required(f):
