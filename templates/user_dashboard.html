@@ -7,8 +7,8 @@
         <i class="bi bi-speedometer2"></i> Dashboard Saya
     </h1>
 
-    <div class="row g-4 mb-5">
-        <div class="col-md-4">
+    <div class="row g-3 g-md-4 mb-4 mb-md-5">
+        <div class="col-12 col-md-4">
             <div class="stat-card">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
@@ -19,7 +19,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-6 col-md-4">
             <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
@@ -30,7 +30,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-6 col-md-4">
             <div class="stat-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
@@ -55,9 +55,9 @@
                         <tr>
                             <th>ID</th>
                             <th>Destinasi</th>
-                            <th>Tanggal</th>
-                            <th>Peserta</th>
-                            <th>Total</th>
+                            <th class="d-none d-lg-table-cell">Tanggal</th>
+                            <th class="d-none d-md-table-cell">Peserta</th>
+                            <th class="d-none d-lg-table-cell">Total</th>
                             <th>Status</th>
                             <th>Aksi</th>
                         </tr>
@@ -67,12 +67,17 @@
                         <tr>
                             <td>#{{ booking.id_pesanan }}</td>
                             <td>
-                                <strong>{{ booking.destination_name }}</strong><br>
-                                <small class="text-muted">{{ booking.lokasi }}</small>
+                                <strong>{{ booking.destination_name }}</strong>
+                                <div class="d-md-block d-lg-none">
+                                    <small class="text-muted d-block">{{ booking.lokasi }}</small>
+                                    <small class="text-muted d-block d-md-none">{{ booking.tanggal.strftime('%d/%m/%Y') }}</small>
+                                </div>
                             </td>
-                            <td>{{ booking.tanggal.strftime('%d/%m/%Y') }}</td>
-                            <td>{{ booking.jumlah_orang }} orang</td>
-                            <td class="text-primary fw-bold">Rp {{ "{:,.0f}".format(booking.jumlah_harga) }}</td>
+                            <td class="d-none d-lg-table-cell">{{ booking.tanggal.strftime('%d/%m/%Y') }}</td>
+                            <td class="d-none d-md-table-cell">{{ booking.jumlah_orang }} orang</td>
+                            <td class="d-none d-lg-table-cell">
+                                <span class="text-primary fw-bold">Rp {{ "{:,.0f}".format(booking.jumlah_harga) }}</span>
+                            </td>
                             <td>
                                 <span class="badge status-{{ booking.status }}">
                                     {{ booking.status }}
@@ -81,7 +86,8 @@
                             <td>
                                 <a href="{{ url_for('booking_detail', id=booking.id_pesanan) }}" 
                                    class="btn btn-sm btn-primary">
-                                    <i class="bi bi-eye"></i> Detail
+                                    <i class="bi bi-eye"></i>
+                                    <span class="d-none d-sm-inline"> Detail</span>
                                 </a>
                             </td>
                         </tr>
@@ -92,7 +98,7 @@
             {% else %}
             <div class="text-center py-5">
                 <i class="bi bi-inbox text-muted" style="font-size: 4rem;"></i>
-                <p class="text-muted mt-3">Belum ada booking</p>
+                <p class="text-muted mt-3 mb-3">Belum ada booking</p>
                 <a href="{{ url_for('destinations') }}" class="btn btn-primary">
                     <i class="bi bi-map"></i> Jelajahi Destinasi
                 </a>
@@ -101,4 +107,23 @@
         </div>
     </div>
 </div>
+
+{% block extra_css %}
+<style>
+    @media (max-width: 576px) {
+        .stat-card {
+            padding: 15px;
+        }
+        .stat-card h3 {
+            font-size: 1.5rem;
+        }
+        .stat-card i {
+            font-size: 1.8rem;
+        }
+        .table {
+            font-size: 0.85rem;
+        }
+    }
+</style>
+{% endblock %}
 {% endblock %}

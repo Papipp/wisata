@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def get_db():
+    """Membuat koneksi database"""
     DATABASE_URL = os.getenv("DB_URL")
     conn = psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor)
     conn.autocommit = True 
@@ -92,6 +93,7 @@ class User:
 
 
 class Destinasi:
+    """Class untuk operasi CRUD Destinasi"""
     
     @staticmethod
     def get_all():

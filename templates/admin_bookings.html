@@ -6,18 +6,18 @@
     <h1 class="mb-4"><i class="bi bi-calendar-check"></i> Kelola Booking</h1>
 
     <div class="card shadow">
-        <div class="card-body">
+        <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover">
+                <table class="table table-hover mb-0">
                     <thead>
                         <tr>
                             <th>ID</th>
                             <th>User</th>
-                            <th>Email</th>
-                            <th>Destinasi</th>
-                            <th>Tanggal Perjalanan</th>
-                            <th>Peserta</th>
-                            <th>Total</th>
+                            <th class="d-none d-lg-table-cell">Email</th>
+                            <th class="d-none d-md-table-cell">Destinasi</th>
+                            <th class="d-none d-xl-table-cell">Tanggal</th>
+                            <th class="d-none d-lg-table-cell">Peserta</th>
+                            <th class="d-none d-md-table-cell">Total</th>
                             <th>Status</th>
                             <th>Aksi</th>
                         </tr>
@@ -26,15 +26,22 @@
                         {% for booking in bookings %}
                         <tr>
                             <td>#{{ booking.id_pesanan }}</td>
-                            <td>{{ booking.user_name }}</td>
-                            <td>{{ booking.user_email }}</td>
                             <td>
-                                <strong>{{ booking.destination_name }}</strong><br>
-                                <small class="text-muted">{{ booking.lokasi }}</small>
+                                {{ booking.user_name }}
+                                <div class="d-lg-none">
+                                    <small class="text-muted">{{ booking.user_email }}</small>
+                                </div>
                             </td>
-                            <td>{{ booking.tanggal.strftime('%d/%m/%Y') }}</td>
-                            <td>{{ booking.jumlah_orang }} orang</td>
-                            <td class="text-primary fw-bold">Rp {{ "{:,.0f}".format(booking.jumlah_harga) }}</td>
+                            <td class="d-none d-lg-table-cell">{{ booking.user_email }}</td>
+                            <td class="d-none d-md-table-cell">
+                                <strong>{{ booking.destination_name }}</strong>
+                                <br><small class="text-muted">{{ booking.lokasi }}</small>
+                            </td>
+                            <td class="d-none d-xl-table-cell">{{ booking.tanggal.strftime('%d/%m/%Y') }}</td>
+                            <td class="d-none d-lg-table-cell">{{ booking.jumlah_orang }} orang</td>
+                            <td class="d-none d-md-table-cell">
+                                <span class="text-primary fw-bold">Rp {{ "{:,.0f}".format(booking.jumlah_harga) }}</span>
+                            </td>
                             <td>
                                 <span class="badge status-{{ booking.status }}">
                                     {{ booking.status }}
@@ -43,10 +50,11 @@
                             <td>
                                 <div class="btn-group" role="group">
                                     <button type="button" class="btn btn-sm btn-primary dropdown-toggle" 
-                                            data-bs-toggle="dropdown">
-                                        Update
+                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-pencil"></i>
+                                        <span class="d-none d-sm-inline"> Update</span>
                                     </button>
-                                    <ul class="dropdown-menu">
+                                    <ul class="dropdown-menu dropdown-menu-end">
                                         <li>
                                             <form method="POST" action="{{ url_for('update_booking_status', id=booking.id_pesanan) }}">
                                                 <input type="hidden" name="status" value="confirmed">
@@ -83,5 +91,22 @@
             </div>
         </div>
     </div>
+
+    {% if not bookings %}
+    <div class="text-center py-5">
+        <i class="bi bi-inbox text-muted" style="font-size: 4rem;"></i>
+        <p class="text-muted mt-3">Belum ada booking</p>
+    </div>
+    {% endif %}
 </div>
+
+{% block extra_css %}
+<style>
+    @media (max-width: 768px) {
+        .table {
+            font-size: 0.85rem;
+        }
+    }
+</style>
+{% endblock %}
 {% endblock %}

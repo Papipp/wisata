@@ -29,16 +29,26 @@ def admin_required(f):
 
 @app.route('/')
 def index():
+    # Admin tidak boleh akses halaman index
+    if session.get('role') == 'admin':
+        return redirect(url_for('admin_dashboard'))
+    
     destinations = Destinasi.get_all()
     return render_template('index.html', destinations=destinations)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    # Jika sudah login, redirect
+    if 'user_id' in session:
+        if session.get('role') == 'admin':
+            return redirect(url_for('admin_dashboard'))
+        return redirect(url_for('user_dashboard'))
+    
     if request.method == 'POST':
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
-        phone = request.form['phone']
+        phone = request.form.get('phone', '')
         
         if User.create(username, email, password, phone):
             flash('Registrasi berhasil! Silakan login', 'success')
@@ -50,6 +60,12 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    # Jika sudah login, redirect
+    if 'user_id' in session:
+        if session.get('role') == 'admin':
+            return redirect(url_for('admin_dashboard'))
+        return redirect(url_for('user_dashboard'))
+    
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -75,25 +91,39 @@ def login():
 def logout():
     session.clear()
     flash('Anda telah logout', 'info')
-    return redirect(url_for('index'))
+    return redirect(url_for('login'))
 
 @app.route('/user/dashboard')
 @login_required
 def user_dashboard():
+    # Admin tidak boleh akses user dashboard
+    if session.get('role') == 'admin':
+        flash('Akses ditolak', 'danger')
+        return redirect(url_for('admin_dashboard'))
+    
     bookings = Pesanan.get_by_user(session['user_id'])
     return render_template('user_dashboard.html', bookings=bookings)
 
 @app.route('/user/profile')
 @login_required
 def user_profile():
+    # Admin tidak boleh akses user profile
+    if session.get('role') == 'admin':
+        flash('Akses ditolak', 'danger')
+        return redirect(url_for('admin_dashboard'))
+    
     user = User.get_by_id(session['user_id'])
     return render_template('user_profile.html', user=user)
 
 @app.route('/user/profile/update', methods=['POST'])
 @login_required
 def update_profile():
+    if session.get('role') == 'admin':
+        flash('Akses ditolak', 'danger')
+        return redirect(url_for('admin_dashboard'))
+    
     email = request.form['email']
-    phone = request.form['phone']
+    phone = request.form.get('phone', '')
     
     if User.update(session['user_id'], email, phone):
         flash('Profil berhasil diperbarui', 'success')
@@ -104,11 +134,20 @@ def update_profile():
 
 @app.route('/destinations')
 def destinations():
+    # Admin tidak boleh akses halaman destinations publik
+    if session.get('role') == 'admin':
+        return redirect(url_for('admin_destinations'))
+    
     all_destinations = Destinasi.get_all()
     return render_template('destinations.html', destinations=all_destinations)
 
 @app.route('/destination/<int:id>')
 def destination_detail(id):
+    # Admin tidak boleh akses detail destinasi publik
+    if session.get('role') == 'admin':
+        flash('Akses ditolak', 'danger')
+        return redirect(url_for('admin_destinations'))
+    
     destination = Destinasi.get_by_id(id)
     if not destination:
         flash('Destinasi tidak ditemukan', 'danger')
@@ -118,12 +157,21 @@ def destination_detail(id):
 @app.route('/booking/<int:destination_id>', methods=['GET', 'POST'])
 @login_required
 def booking(destination_id):
+    # Hanya user yang bisa booking
+    if session.get('role') != 'user':
+        flash('Akses ditolak. Hanya user yang dapat melakukan booking', 'danger')
+        return redirect(url_for('admin_dashboard'))
+    
     if request.method == 'POST':
         tanggal = request.form.get('tanggal')
         jumlah_orang = int(request.form['jumlah_orang'])
         pesan = request.form.get('pesan', '')
         
         destination = Destinasi.get_by_id(destination_id)
+        if not destination:
+            flash('Destinasi tidak ditemukan', 'danger')
+            return redirect(url_for('destinations'))
+        
         jumlah_harga = destination['harga'] * jumlah_orang
         
         id_pesanan = Pesanan.create(
@@ -142,11 +190,19 @@ def booking(destination_id):
             flash('Gagal membuat booking', 'danger')
     
     destination = Destinasi.get_by_id(destination_id)
+    if not destination:
+        flash('Destinasi tidak ditemukan', 'danger')
+        return redirect(url_for('destinations'))
+    
     return render_template('booking_form.html', destination=destination, now=datetime.utcnow(), timedelta=timedelta)
 
 @app.route('/booking/detail/<int:id>')
 @login_required
 def booking_detail(id):
+    if session.get('role') == 'admin':
+        flash('Akses ditolak', 'danger')
+        return redirect(url_for('admin_dashboard'))
+    
     booking = Pesanan.get_by_id(id)
     if not booking or booking['id_user'] != session['user_id']:
         flash('Booking tidak ditemukan', 'danger')
@@ -156,15 +212,23 @@ def booking_detail(id):
 @app.route('/booking/cancel/<int:id>', methods=['POST'])
 @login_required
 def cancel_booking(id):
+    if session.get('role') == 'admin':
+        flash('Akses ditolak', 'danger')
+        return redirect(url_for('admin_dashboard'))
+    
     booking = Pesanan.get_by_id(id)
     if booking and booking['id_user'] == session['user_id']:
         if Pesanan.update_status(id, 'cancelled'):
             flash('Booking berhasil dibatalkan', 'success')
         else:
             flash('Gagal membatalkan booking', 'danger')
+    else:
+        flash('Booking tidak ditemukan', 'danger')
+    
     return redirect(url_for('user_dashboard'))
 
-# ADMIN ROUTES
+# ============= ADMIN ROUTES =============
+
 @app.route('/admin/dashboard')
 @admin_required
 def admin_dashboard():
@@ -217,6 +281,10 @@ def edit_destination(id):
             flash('Gagal memperbarui destinasi', 'danger')
     
     destination = Destinasi.get_by_id(id)
+    if not destination:
+        flash('Destinasi tidak ditemukan', 'danger')
+        return redirect(url_for('admin_destinations'))
+    
     return render_template('admin_destination_form.html', destination=destination)
 
 @app.route('/admin/destination/delete/<int:id>', methods=['POST'])
@@ -226,6 +294,7 @@ def delete_destination(id):
         flash('Destinasi berhasil dihapus', 'success')
     else:
         flash('Gagal menghapus destinasi', 'danger')
+    
     return redirect(url_for('admin_destinations'))
 
 @app.route('/admin/bookings')
@@ -238,10 +307,12 @@ def admin_bookings():
 @admin_required
 def update_booking_status(id):
     status = request.form['status']
+    
     if Pesanan.update_status(id, status):
         flash('Status booking berhasil diperbarui', 'success')
     else:
         flash('Gagal memperbarui status booking', 'danger')
+    
     return redirect(url_for('admin_bookings'))
 
 @app.route('/admin/users')
@@ -249,6 +320,15 @@ def update_booking_status(id):
 def admin_users():
     users = User.get_all()
     return render_template('admin_users.html', users=users)
+
+# Error handlers
+@app.errorhandler(404)
+def not_found(e):
+    return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def server_error(e):
+    return render_template('500.html'), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

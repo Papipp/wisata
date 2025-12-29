@@ -3,52 +3,52 @@
 
 {% block content %}
 <div class="container my-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
         <h1><i class="bi bi-speedometer2"></i> Admin Dashboard</h1>
-        <span class="badge bg-danger fs-6">ADMIN</span>
+        <span class="badge bg-danger fs-6">ADMIN PANEL</span>
     </div>
 
     <!-- Statistics Cards -->
-    <div class="row g-4 mb-5">
-        <div class="col-md-3">
+    <div class="row g-3 g-md-4 mb-4 mb-md-5">
+        <div class="col-6 col-lg-3">
             <div class="stat-card">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <h3 class="mb-0">{{ stats.total_users }}</h3>
-                        <p class="mb-0">Total Users</p>
+                        <p class="mb-0 small">Total Users</p>
                     </div>
                     <i class="bi bi-people"></i>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-6 col-lg-3">
             <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <h3 class="mb-0">{{ stats.total_destinations }}</h3>
-                        <p class="mb-0">Destinasi</p>
+                        <p class="mb-0 small">Destinasi</p>
                     </div>
                     <i class="bi bi-map"></i>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-6 col-lg-3">
             <div class="stat-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <h3 class="mb-0">{{ stats.total_bookings }}</h3>
-                        <p class="mb-0">Total Booking</p>
+                        <p class="mb-0 small">Booking</p>
                     </div>
                     <i class="bi bi-calendar-check"></i>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-6 col-lg-3">
             <div class="stat-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <h3 class="mb-0">{{ stats.pending_bookings }}</h3>
-                        <p class="mb-0">Pending</p>
+                        <p class="mb-0 small">Pending</p>
                     </div>
                     <i class="bi bi-clock-history"></i>
                 </div>
@@ -57,36 +57,36 @@
     </div>
 
     <!-- Quick Actions -->
-    <div class="row g-4 mb-5">
-        <div class="col-md-4">
+    <div class="row g-3 g-md-4 mb-4 mb-md-5">
+        <div class="col-12 col-md-4">
             <a href="{{ url_for('admin_destinations') }}" class="text-decoration-none">
                 <div class="card h-100 text-center hover-lift">
-                    <div class="card-body">
-                        <i class="bi bi-map-fill text-primary" style="font-size: 3rem;"></i>
-                        <h5 class="mt-3">Kelola Destinasi</h5>
-                        <p class="text-muted">Tambah, edit, atau hapus destinasi</p>
+                    <div class="card-body p-4">
+                        <i class="bi bi-map-fill text-primary" style="font-size: 2.5rem;"></i>
+                        <h5 class="mt-3 mb-2">Kelola Destinasi</h5>
+                        <p class="text-muted small mb-0">Tambah, edit, atau hapus destinasi</p>
                     </div>
                 </div>
             </a>
         </div>
-        <div class="col-md-4">
+        <div class="col-12 col-md-4">
             <a href="{{ url_for('admin_bookings') }}" class="text-decoration-none">
                 <div class="card h-100 text-center hover-lift">
-                    <div class="card-body">
-                        <i class="bi bi-calendar-check-fill text-success" style="font-size: 3rem;"></i>
-                        <h5 class="mt-3">Kelola Booking</h5>
-                        <p class="text-muted">Lihat dan update status booking</p>
+                    <div class="card-body p-4">
+                        <i class="bi bi-calendar-check-fill text-success" style="font-size: 2.5rem;"></i>
+                        <h5 class="mt-3 mb-2">Kelola Booking</h5>
+                        <p class="text-muted small mb-0">Lihat dan update status booking</p>
                     </div>
                 </div>
             </a>
         </div>
-        <div class="col-md-4">
+        <div class="col-12 col-md-4">
             <a href="{{ url_for('admin_users') }}" class="text-decoration-none">
                 <div class="card h-100 text-center hover-lift">
-                    <div class="card-body">
-                        <i class="bi bi-people-fill text-info" style="font-size: 3rem;"></i>
-                        <h5 class="mt-3">Kelola Users</h5>
-                        <p class="text-muted">Lihat daftar semua users</p>
+                    <div class="card-body p-4">
+                        <i class="bi bi-people-fill text-info" style="font-size: 2.5rem;"></i>
+                        <h5 class="mt-3 mb-2">Kelola Users</h5>
+                        <p class="text-muted small mb-0">Lihat daftar semua users</p>
                     </div>
                 </div>
             </a>
@@ -99,15 +99,16 @@
             <h4 class="mb-0"><i class="bi bi-clock-history"></i> Booking Terbaru</h4>
         </div>
         <div class="card-body p-0">
+            {% if bookings %}
             <div class="table-responsive">
                 <table class="table table-hover mb-0">
                     <thead>
                         <tr>
                             <th>ID</th>
                             <th>User</th>
-                            <th>Destinasi</th>
-                            <th>Tanggal</th>
-                            <th>Total</th>
+                            <th class="d-none d-md-table-cell">Destinasi</th>
+                            <th class="d-none d-lg-table-cell">Tanggal</th>
+                            <th class="d-none d-md-table-cell">Total</th>
                             <th>Status</th>
                         </tr>
                     </thead>
@@ -116,9 +117,11 @@
                         <tr>
                             <td>#{{ booking.id_pesanan }}</td>
                             <td>{{ booking.user_name }}</td>
-                            <td>{{ booking.destination_name }}</td>
-                            <td>{{ booking.created_at.strftime('%d/%m/%Y') }}</td>
-                            <td class="text-primary fw-bold">Rp {{ "{:,.0f}".format(booking.jumlah_harga) }}</td>
+                            <td class="d-none d-md-table-cell">{{ booking.destination_name }}</td>
+                            <td class="d-none d-lg-table-cell">{{ booking.created_at.strftime('%d/%m/%Y') }}</td>
+                            <td class="d-none d-md-table-cell">
+                                <span class="text-primary fw-bold">Rp {{ "{:,.0f}".format(booking.jumlah_harga) }}</span>
+                            </td>
                             <td>
                                 <span class="badge status-{{ booking.status }}">
                                     {{ booking.status }}
@@ -129,24 +132,37 @@
                     </tbody>
                 </table>
             </div>
-        </div>
-        <div class="card-footer bg-white text-center">
-            <a href="{{ url_for('admin_bookings') }}" class="btn btn-sm btn-outline-primary">
-                Lihat Semua Booking <i class="bi bi-arrow-right"></i>
-            </a>
+            <div class="card-footer bg-white text-center">
+                <a href="{{ url_for('admin_bookings') }}" class="btn btn-sm btn-outline-primary">
+                    Lihat Semua Booking <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-inbox text-muted" style="font-size: 3rem;"></i>
+                <p class="text-muted mt-3">Belum ada booking</p>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>
 
 {% block extra_css %}
 <style>
-.hover-lift {
-    transition: all 0.3s ease;
-}
-.hover-lift:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-}
+    @media (max-width: 576px) {
+        .stat-card {
+            padding: 15px;
+        }
+        .stat-card h3 {
+            font-size: 1.5rem;
+        }
+        .stat-card i {
+            font-size: 1.8rem;
+        }
+        .stat-card p {
+            font-size: 0.75rem;
+        }
+    }
 </style>
 {% endblock %}
 {% endblock %}

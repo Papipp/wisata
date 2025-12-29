@@ -10,7 +10,7 @@
 </div>
 
 <div class="container my-5">
-    <div class="row mb-4">
+    <div class="row mb-4 g-3">
         <div class="col-md-8">
             <p class="text-muted">Menampilkan {{ destinations|length }} destinasi</p>
         </div>
@@ -26,9 +26,9 @@
         </div>
     </div>
 
-    <div class="row g-4" id="destinationGrid">
+    <div class="row g-3 g-md-4" id="destinationGrid">
         {% for destination in destinations %}
-        <div class="col-md-6 col-lg-4 destination-item" data-category="{{ destination.kategori }}">
+        <div class="col-12 col-sm-6 col-lg-4 destination-item" data-category="{{ destination.kategori }}">
             <div class="card h-100">
                 <img src="{{ destination.image_url }}" class="card-img-top" alt="{{ destination.nama }}">
                 <div class="card-body">
@@ -41,14 +41,15 @@
                     </p>
                     <p class="card-text">{{ destination.deskripsi[:100] }}...</p>
                     <hr>
-                    <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2">
                         <div>
                             <h5 class="text-primary mb-0">Rp {{ "{:,.0f}".format(destination.harga) }}</h5>
                             <small class="text-muted">
                                 <i class="bi bi-clock"></i> {{ destination.durasi }}
                             </small>
                         </div>
-                        <a href="{{ url_for('destination_detail', id=destination.id_destinasi) }}" class="btn btn-primary btn-sm">
+                        <a href="{{ url_for('destination_detail', id=destination.id_destinasi) }}" 
+                           class="btn btn-primary btn-sm w-100 w-sm-auto">
                             Lihat Detail
                         </a>
                     </div>
@@ -57,6 +58,13 @@
         </div>
         {% endfor %}
     </div>
+
+    {% if not destinations %}
+    <div class="text-center py-5">
+        <i class="bi bi-inbox text-muted" style="font-size: 4rem;"></i>
+        <p class="text-muted mt-3">Belum ada destinasi tersedia</p>
+    </div>
+    {% endif %}
 </div>
 
 {% block extra_js %}
@@ -74,5 +82,18 @@ document.getElementById('categoryFilter').addEventListener('change', function() 
     });
 });
 </script>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    @media (max-width: 576px) {
+        .hero-section h1 {
+            font-size: 2rem;
+        }
+        .hero-section .lead {
+            font-size: 1rem;
+        }
+    }
+</style>
 {% endblock %}
 {% endblock %}

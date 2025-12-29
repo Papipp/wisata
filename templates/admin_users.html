@@ -6,17 +6,17 @@
     <h1 class="mb-4"><i class="bi bi-people"></i> Kelola Users</h1>
 
     <div class="card shadow">
-        <div class="card-body">
+        <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover">
+                <table class="table table-hover mb-0">
                     <thead>
                         <tr>
                             <th>ID</th>
                             <th>Username</th>
-                            <th>Email</th>
-                            <th>Telepon</th>
+                            <th class="d-none d-md-table-cell">Email</th>
+                            <th class="d-none d-lg-table-cell">Telepon</th>
                             <th>Role</th>
-                            <th>Terdaftar</th>
+                            <th class="d-none d-md-table-cell">Terdaftar</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -25,9 +25,12 @@
                             <td>{{ user.id_user }}</td>
                             <td>
                                 <i class="bi bi-person-circle"></i> {{ user.username }}
+                                <div class="d-md-none">
+                                    <small class="text-muted">{{ user.email }}</small>
+                                </div>
                             </td>
-                            <td>{{ user.email }}</td>
-                            <td>{{ user.phone or '-' }}</td>
+                            <td class="d-none d-md-table-cell">{{ user.email }}</td>
+                            <td class="d-none d-lg-table-cell">{{ user.phone or '-' }}</td>
                             <td>
                                 {% if user.role == 'admin' %}
                                 <span class="badge bg-danger">ADMIN</span>
@@ -35,7 +38,7 @@
                                 <span class="badge bg-success">USER</span>
                                 {% endif %}
                             </td>
-                            <td>{{ user.created_at.strftime('%d/%m/%Y') }}</td>
+                            <td class="d-none d-md-table-cell">{{ user.created_at.strftime('%d/%m/%Y') }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -43,5 +46,22 @@
             </div>
         </div>
     </div>
+
+    {% if not users %}
+    <div class="text-center py-5">
+        <i class="bi bi-inbox text-muted" style="font-size: 4rem;"></i>
+        <p class="text-muted mt-3">Belum ada user terdaftar</p>
+    </div>
+    {% endif %}
 </div>
+
+{% block extra_css %}
+<style>
+    @media (max-width: 768px) {
+        .table {
+            font-size: 0.85rem;
+        }
+    }
+</style>
+{% endblock %}
 {% endblock %}

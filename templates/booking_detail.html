@@ -4,37 +4,38 @@
 {% block content %}
 <div class="container my-5">
     <div class="row justify-content-center">
-        <div class="col-lg-8">
+        <div class="col-12 col-lg-8">
             <div class="card shadow-lg">
                 <div class="card-header bg-primary text-white">
                     <h4 class="mb-0"><i class="bi bi-ticket-detailed"></i> Detail Booking</h4>
                 </div>
-                <div class="card-body p-4">
+                <div class="card-body p-3 p-md-4">
                     <div class="text-center mb-4">
                         <span class="badge status-{{ booking.status }} fs-6">
                             {{ booking.status.upper() }}
                         </span>
-                        <p class="text-muted mt-2">Booking ID: #{{ booking.id_pesanan }}</p>
+                        <p class="text-muted mt-2 mb-0">Booking ID: #{{ booking.id_pesanan }}</p>
                     </div>
 
-                    <div class="row mb-4">
-                        <div class="col-md-4">
-                            <img src="{{ booking.image_url }}" class="img-fluid rounded" alt="{{ booking.destination_name }}">
+                    <div class="row mb-4 g-3">
+                        <div class="col-12 col-md-4">
+                            <img src="{{ booking.image_url }}" class="img-fluid rounded w-100" 
+                                 alt="{{ booking.destination_name }}" style="max-height: 200px; object-fit: cover;">
                         </div>
-                        <div class="col-md-8">
-                            <h3>{{ booking.destination_name }}</h3>
+                        <div class="col-12 col-md-8">
+                            <h3 class="h4 h-md-3">{{ booking.destination_name }}</h3>
                             <p class="text-muted">
                                 <i class="bi bi-geo-alt"></i> {{ booking.lokasi }}
                             </p>
                             <hr>
-                            <div class="row">
+                            <div class="row g-3">
                                 <div class="col-6">
                                     <strong><i class="bi bi-calendar"></i> Tanggal:</strong><br>
-                                    {{ booking.tanggal.strftime('%d %B %Y') }}
+                                    <small>{{ booking.tanggal.strftime('%d %B %Y') }}</small>
                                 </div>
                                 <div class="col-6">
                                     <strong><i class="bi bi-people"></i> Peserta:</strong><br>
-                                    {{ booking.jumlah_orang }} orang
+                                    <small>{{ booking.jumlah_orang }} orang</small>
                                 </div>
                             </div>
                         </div>
@@ -50,9 +51,9 @@
                     <div class="card bg-light">
                         <div class="card-body">
                             <h5>Informasi Pembayaran</h5>
-                            <div class="d-flex justify-content-between">
+                            <div class="d-flex justify-content-between align-items-center">
                                 <span>Total Pembayaran:</span>
-                                <strong class="text-primary fs-4">Rp {{ "{:,.0f}".format(booking.jumlah_harga) }}</strong>
+                                <strong class="text-primary fs-4 fs-md-3">Rp {{ "{:,.0f}".format(booking.jumlah_harga) }}</strong>
                             </div>
                         </div>
                     </div>
