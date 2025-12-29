@@ -32,7 +32,6 @@ def admin_required(f):
 
 @app.route('/')
 def index():
-    # Admin tidak boleh akses halaman index
     if session.get('role') == 'admin':
         return redirect(url_for('admin_dashboard'))
     
@@ -41,7 +40,6 @@ def index():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    # Jika sudah login, redirect
     if 'user_id' in session:
         if session.get('role') == 'admin':
             return redirect(url_for('admin_dashboard'))
@@ -63,7 +61,6 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    # Jika sudah login, redirect
     if 'user_id' in session:
         if session.get('role') == 'admin':
             return redirect(url_for('admin_dashboard'))
@@ -99,7 +96,6 @@ def logout():
 @app.route('/user/dashboard')
 @login_required
 def user_dashboard():
-    # Admin tidak boleh akses user dashboard
     if session.get('role') == 'admin':
         flash('Akses ditolak', 'danger')
         return redirect(url_for('admin_dashboard'))
@@ -110,7 +106,6 @@ def user_dashboard():
 @app.route('/user/profile')
 @login_required
 def user_profile():
-    # Admin tidak boleh akses user profile
     if session.get('role') == 'admin':
         flash('Akses ditolak', 'danger')
         return redirect(url_for('admin_dashboard'))
@@ -137,7 +132,6 @@ def update_profile():
 
 @app.route('/destinations')
 def destinations():
-    # Admin tidak boleh akses halaman destinations publik
     if session.get('role') == 'admin':
         return redirect(url_for('admin_destinations'))
     
@@ -146,7 +140,6 @@ def destinations():
 
 @app.route('/destination/<int:id>')
 def destination_detail(id):
-    # Admin tidak boleh akses detail destinasi publik
     if session.get('role') == 'admin':
         flash('Akses ditolak', 'danger')
         return redirect(url_for('admin_destinations'))
@@ -160,7 +153,6 @@ def destination_detail(id):
 @app.route('/booking/<int:destination_id>', methods=['GET', 'POST'])
 @login_required
 def booking(destination_id):
-    # Hanya user yang bisa booking
     if session.get('role') != 'user':
         flash('Akses ditolak. Hanya user yang dapat melakukan booking', 'danger')
         return redirect(url_for('admin_dashboard'))

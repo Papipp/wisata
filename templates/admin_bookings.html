@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="container my-5">
-    <h1 class="mb-4"><i class="bi bi-calendar-check"></i> Kelola Booking</h1>
+    <h1 class="mb-4 text-white"><i class="bi bi-calendar-check"></i> Kelola Booking</h1>
 
     <div class="card shadow">
         <div class="card-body p-0">
@@ -50,15 +50,15 @@
                             <td>
                                 <div class="btn-group" role="group">
                                     <button type="button" class="btn btn-sm btn-primary dropdown-toggle" 
-                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                            data-bs-toggle="dropdown" data-bs-boundary="viewport">
                                         <i class="bi bi-pencil"></i>
                                         <span class="d-none d-sm-inline"> Update</span>
                                     </button>
-                                    <ul class="dropdown-menu dropdown-menu-end">
+                                    <ul class="dropdown-menu shadow">
                                         <li>
                                             <form method="POST" action="{{ url_for('update_booking_status', id=booking.id_pesanan) }}">
                                                 <input type="hidden" name="status" value="confirmed">
-                                                <button type="submit" class="dropdown-item">
+                                                <button class="dropdown-item">
                                                     <i class="bi bi-check-circle text-success"></i> Confirmed
                                                 </button>
                                             </form>
@@ -66,7 +66,7 @@
                                         <li>
                                             <form method="POST" action="{{ url_for('update_booking_status', id=booking.id_pesanan) }}">
                                                 <input type="hidden" name="status" value="completed">
-                                                <button type="submit" class="dropdown-item">
+                                                <button class="dropdown-item">
                                                     <i class="bi bi-check-all text-info"></i> Completed
                                                 </button>
                                             </form>
@@ -76,7 +76,7 @@
                                             <form method="POST" action="{{ url_for('update_booking_status', id=booking.id_pesanan) }}"
                                                   onsubmit="return confirm('Batalkan booking ini?')">
                                                 <input type="hidden" name="status" value="cancelled">
-                                                <button type="submit" class="dropdown-item text-danger">
+                                                <button class="dropdown-item text-danger">
                                                     <i class="bi bi-x-circle"></i> Cancelled
                                                 </button>
                                             </form>

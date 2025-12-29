@@ -3,7 +3,7 @@
 
 {% block content %}
 <!-- Hero Section -->
-<div class="hero-section">
+<div class="hero-section py-5">
     <div class="container position-relative">
         <div class="row align-items-center">
             <div class="col-lg-7">
@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div class="col-lg-5 d-none d-lg-block text-center">
-                <i class="bi bi-globe2 text-white" style="font-size: 15rem; opacity: 0.3;"></i>
+                <i class="bi bi-flight text-white" style="font-size: 15rem; opacity: 0.3;"></i>
             </div>
         </div>
     </div>
@@ -30,8 +30,8 @@
 <!-- Features Section -->
 <div class="container my-5 py-5">
     <div class="text-center mb-5">
-        <h2 class="fw-bold">Mengapa Memilih Kami?</h2>
-        <p class="text-muted">Kami memberikan pengalaman terbaik untuk perjalanan Anda</p>
+        <h2 class="fw-bold text-white">Mengapa Memilih Kami?</h2>
+        <p class="text-white">Kami memberikan pengalaman terbaik untuk perjalanan Anda</p>
     </div>
     
     <div class="row g-4">
@@ -71,14 +71,14 @@
     </div>
 </div>
 
-<!-- Popular Destinations -->
+<!-- Destinations -->
 <div class="container my-5 py-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex text-white justify-content-between align-items-center mb-4">
         <div>
             <h2 class="fw-bold">Destinasi Populer</h2>
-            <p class="text-muted">Pilihan favorit para traveler</p>
+            <p>Pilihan favorit para traveler</p>
         </div>
-        <a href="{{ url_for('destinations') }}" class="btn btn-outline-primary d-none d-md-block">
+        <a href="{{ url_for('destinations') }}" class="btn text-white btn-outline-white">
             Lihat Semua <i class="bi bi-arrow-right"></i>
         </a>
     </div>
@@ -114,26 +114,20 @@
         </div>
         {% endfor %}
     </div>
-    
-    <div class="text-center mt-4 d-md-none">
-        <a href="{{ url_for('destinations') }}" class="btn btn-outline-primary">
-            Lihat Semua Destinasi <i class="bi bi-arrow-right"></i>
-        </a>
-    </div>
 </div>
 
 <!-- CTA Section -->
 <div class="container my-5 py-5">
-    <div class="card bg-primary text-white text-center p-5">
+    <div class="card bg-white opacity-50 text-dark text-center p-5">
         <div class="card-body">
             <h2 class="fw-bold mb-3">Siap Memulai Petualangan Anda?</h2>
             <p class="lead mb-4">Daftar sekarang dan dapatkan penawaran menarik untuk destinasi pilihan Anda!</p>
             {% if not session.user_id %}
             <div class="d-flex flex-wrap justify-content-center gap-3">
-                <a href="{{ url_for('register') }}" class="btn btn-light btn-lg">
+                <a href="{{ url_for('register') }}" class="btn text-dark btn-light btn-lg">
                     <i class="bi bi-person-plus"></i> Daftar Gratis
                 </a>
-                <a href="{{ url_for('destinations') }}" class="btn btn-outline-light btn-lg">
+                <a href="{{ url_for('destinations') }}" class="btn text-dark btn-light btn-lg">
                     <i class="bi bi-search"></i> Jelajahi Destinasi
                 </a>
             </div>

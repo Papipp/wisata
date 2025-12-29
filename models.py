@@ -69,7 +69,7 @@ class User:
         cur = conn.cursor()
         
         cur.execute(
-            'SELECT id_user, username, email, phone, role, created_at FROM "user" ORDER BY created_at DESC'
+            'SELECT id_user, username, email, phone, role, created_at FROM "user" ORDER BY created_at ASC'
         )
         users = cur.fetchall()
         
@@ -101,7 +101,7 @@ class Destinasi:
         conn = get_db()
         cur = conn.cursor()
         
-        cur.execute('SELECT * FROM destinasi ORDER BY created_at DESC')
+        cur.execute('SELECT * FROM destinasi ORDER BY created_at ASC')
         destinations = cur.fetchall()
         
         cur.close()
@@ -213,7 +213,7 @@ class Pesanan:
             FROM pesanan p
             JOIN destinasi d ON p.id_destinasi = d.id_destinasi
             WHERE p.id_user = %s
-            ORDER BY p.created_at DESC
+            ORDER BY p.created_at ASC
         ''', (id_user,))
         pesanan_list = cur.fetchall()
         
@@ -233,7 +233,7 @@ class Pesanan:
             FROM pesanan p
             JOIN destinasi d ON p.id_destinasi = d.id_destinasi
             JOIN "user" u ON p.id_user = u.id_user
-            ORDER BY p.created_at DESC
+            ORDER BY p.created_at ASC
         ''')
         pesanan_list = cur.fetchall()
         
@@ -252,7 +252,7 @@ class Pesanan:
             FROM pesanan p
             JOIN destinasi d ON p.id_destinasi = d.id_destinasi
             JOIN "user" u ON p.id_user = u.id_user
-            ORDER BY p.created_at DESC
+            ORDER BY p.created_at ASC
             LIMIT %s
         ''', (limit,))
         pesanan_list = cur.fetchall()
